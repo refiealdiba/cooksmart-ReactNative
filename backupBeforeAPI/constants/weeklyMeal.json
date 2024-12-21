@@ -1,0 +1,242 @@
+{
+    "week": {
+        "monday": {
+            "meals": [
+                {
+                    "id": 1011658,
+                    "imageType": "jpg",
+                    "title": "Clean Eating Instant Pot Superfood Steel Cut Oatmeal",
+                    "readyInMinutes": 35,
+                    "servings": 6,
+                    "sourceUrl": "https://www.thegraciouspantry.com/clean-eating-instant-pot-superfood-steel-cut-oatmeal-recipe/"
+                },
+                {
+                    "id": 1762959,
+                    "imageType": "jpg",
+                    "title": "Pesto and Mozzarella Grilled Cheese Sandwich",
+                    "readyInMinutes": 13,
+                    "servings": 2,
+                    "sourceUrl": "https://www.simplyscratch.com/the-special-grilled-cheese/"
+                },
+                {
+                    "id": 1814921,
+                    "imageType": "jpg",
+                    "title": "Coconut Black Rice Bowls with Tofu & Purple Asparagus",
+                    "readyInMinutes": 60,
+                    "servings": 4,
+                    "sourceUrl": "https://www.eatingwell.com/recipe/279071/coconut-black-rice-bowls-with-tofu-purple-asparagus/"
+                }
+            ],
+            "nutrients": {
+                "calories": 2000.24,
+                "protein": 63.59,
+                "fat": 106.96,
+                "carbohydrates": 202.16
+            }
+        },
+        "tuesday": {
+            "meals": [
+                {
+                    "id": 541433,
+                    "imageType": "jpg",
+                    "title": "Grain-Free Cream of Wheat and My Daily Diet",
+                    "readyInMinutes": 45,
+                    "servings": 1,
+                    "sourceUrl": "https://alldayidreamaboutfood.com/grain-free-hot-cereal/"
+                },
+                {
+                    "id": 1750103,
+                    "imageType": "jpg",
+                    "title": "Easy Air Fryer Grilled Cheese Sandwich",
+                    "readyInMinutes": 13,
+                    "servings": 2,
+                    "sourceUrl": "https://www.thismamacooks.com/2022/08/air-fryer-grilled-cheese-sandwich-recipe.html"
+                },
+                {
+                    "id": 252235,
+                    "imageType": "jpg",
+                    "title": "Honey Walnut-Crusted Aged Cheddar Panini…and Scenes from Seattle",
+                    "readyInMinutes": 20,
+                    "servings": 4,
+                    "sourceUrl": "https://paninihappy.com/honey-walnut-crusted-aged-cheddar-panini-and-scenes-from-seattle/"
+                }
+            ],
+            "nutrients": {
+                "calories": 1998.38,
+                "protein": 72.74,
+                "fat": 142.18,
+                "carbohydrates": 126.83
+            }
+        },
+        "wednesday": {
+            "meals": [
+                {
+                    "id": 550874,
+                    "imageType": "jpg",
+                    "title": "Lime, Ginger and Coconut Smoothie",
+                    "readyInMinutes": 45,
+                    "servings": 1,
+                    "sourceUrl": "https://thehealthyfoodie.com/lime-ginger-and-coconut-smoothie/"
+                },
+                {
+                    "id": 559962,
+                    "imageType": "jpg",
+                    "title": "Whole Wheat Spring Pizza",
+                    "readyInMinutes": 24,
+                    "servings": 2,
+                    "sourceUrl": "https://handletheheat.com/whole-wheat-spring-pizza/"
+                },
+                {
+                    "id": 786325,
+                    "imageType": "jpg",
+                    "title": "Methi Paneer, Mughlai Methi Paneer",
+                    "readyInMinutes": 15,
+                    "servings": 4,
+                    "sourceUrl": "https://www.tarladalal.com/methi-paneer--mughlai-methi-paneer-recipe-30949r"
+                }
+            ],
+            "nutrients": {
+                "calories": 1999.68,
+                "protein": 107.47,
+                "fat": 117.1,
+                "carbohydrates": 150.62
+            }
+        },
+        "thursday": {
+            "meals": [
+                {
+                    "id": 509185,
+                    "imageType": "jpg",
+                    "title": "Microwave Coffee Cake in a Mug",
+                    "readyInMinutes": 6,
+                    "servings": 1,
+                    "sourceUrl": "https://paleomg.com/microwave-coffee-cake-in-a-mug/"
+                },
+                {
+                    "id": 1071494,
+                    "imageType": "jpg",
+                    "title": "Easy Homemade Mac and Cheese",
+                    "readyInMinutes": 25,
+                    "servings": 8,
+                    "sourceUrl": "https://www.willcookforsmiles.com/easy-homemade-mac-and-cheese/"
+                },
+                {
+                    "id": 606451,
+                    "imageType": "jpg",
+                    "title": "Creamy Stovetop Mac and Cheese",
+                    "readyInMinutes": 20,
+                    "servings": 6,
+                    "sourceUrl": "https://www.simplywhisked.com/creamy-stovetop-mac-and-cheese/"
+                }
+            ],
+            "nutrients": {
+                "calories": 2000.07,
+                "protein": 67.89,
+                "fat": 133.63,
+                "carbohydrates": 137.11
+            }
+        },
+        "friday": {
+            "meals": [
+                {
+                    "id": 542192,
+                    "imageType": "jpg",
+                    "title": "HUEVOS RANCHEROS",
+                    "readyInMinutes": 30,
+                    "servings": 4,
+                    "sourceUrl": "http://www.panningtheglobe.com/2013/02/03/huevos-rancheros/"
+                },
+                {
+                    "id": 1642781,
+                    "imageType": "jpg",
+                    "title": "45 Vibrant Vegan Mediterranean – Munch your way through the med",
+                    "readyInMinutes": 30,
+                    "servings": 1,
+                    "sourceUrl": "https://hurrythefoodup.com/vegan-mediterranean-recipes/"
+                },
+                {
+                    "id": 780017,
+                    "imageType": "jpg",
+                    "title": "The (Lemon)grass is Always Greener: Lemongrass Tofu Banh Mi Sandwiches",
+                    "readyInMinutes": 81,
+                    "servings": 4,
+                    "sourceUrl": "https://www.crumbblog.com/lemongrass-tofu-banh-mi/"
+                }
+            ],
+            "nutrients": {
+                "calories": 1999.7,
+                "protein": 67.46,
+                "fat": 128.19,
+                "carbohydrates": 154.44
+            }
+        },
+        "saturday": {
+            "meals": [
+                {
+                    "id": 658624,
+                    "imageType": "jpg",
+                    "title": "Roasted Plum Oatmeal",
+                    "readyInMinutes": 45,
+                    "servings": 4,
+                    "sourceUrl": "https://spoonacular.com/roasted-plum-oatmeal-658624"
+                },
+                {
+                    "id": 792824,
+                    "imageType": "jpg",
+                    "title": "Chipotle Brats Mac and Cheese",
+                    "readyInMinutes": 30,
+                    "servings": 6,
+                    "sourceUrl": "https://spicedblog.com/chipotle-brats-mac-cheese/"
+                },
+                {
+                    "id": 652594,
+                    "imageType": "jpg",
+                    "title": "Mung Bean Sprout and Quinoa Salad",
+                    "readyInMinutes": 45,
+                    "servings": 6,
+                    "sourceUrl": "https://spoonacular.com/mung-bean-sprout-and-quinoa-salad-652594"
+                }
+            ],
+            "nutrients": {
+                "calories": 1999.99,
+                "protein": 84.65,
+                "fat": 117.27,
+                "carbohydrates": 162.96
+            }
+        },
+        "sunday": {
+            "meals": [
+                {
+                    "id": 1089018,
+                    "imageType": "jpg",
+                    "title": "Perfect scrambled eggs",
+                    "readyInMinutes": 20,
+                    "servings": 1,
+                    "sourceUrl": "https://www.bbcgoodfood.com/recipes/perfect-scrambled-eggs-recipe"
+                },
+                {
+                    "id": 924856,
+                    "imageType": "jpg",
+                    "title": "No Effort Vegan Coconut Curry",
+                    "readyInMinutes": 25,
+                    "servings": 4,
+                    "sourceUrl": "https://hurrythefoodup.com/vegan-coconut-curry/"
+                },
+                {
+                    "id": 642540,
+                    "imageType": "jpg",
+                    "title": "Falafel Burgers",
+                    "readyInMinutes": 45,
+                    "servings": 4,
+                    "sourceUrl": "https://spoonacular.com/falafel-burgers-642540"
+                }
+            ],
+            "nutrients": {
+                "calories": 1999.67,
+                "protein": 54.07,
+                "fat": 127.68,
+                "carbohydrates": 172.5
+            }
+        }
+    }
+}

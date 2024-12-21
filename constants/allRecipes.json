@@ -1,0 +1,58 @@
+[
+    {
+        "id": 1,
+        "title": "Spaghetti Bolognese",
+        "image": "https://plus.unsplash.com/premium_photo-1664478291780-0c67f5fb15e6?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "cuisine": "Italian",
+        "minute": "30 min"
+    },
+    {
+        "id": 2,
+        "title": "Sushi",
+        "image": "https://plus.unsplash.com/premium_photo-1668143358351-b20146dbcc02?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "cuisine": "Japanese",
+        "minute": "25 min"
+    },
+    {
+        "id": 3,
+        "title": "Tacos",
+        "image": "https://plus.unsplash.com/premium_photo-1661730329741-b3bf77019b39?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "cuisine": "Mexican",
+        "minute": "20 min"
+    },
+    {
+        "id": 4,
+        "title": "Croissant",
+        "image": "https://plus.unsplash.com/premium_photo-1661743823829-326b78143b30?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "cuisine": "French",
+        "minute": "15 min"
+    },
+    {
+        "id": 5,
+        "title": "Tom Yum Soup",
+        "image": "https://images.unsplash.com/photo-1702940860770-f742273de15c?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "cuisine": "Thai",
+        "minute": "35 min"
+    },
+    {
+        "id": 6,
+        "title": "Pancakes",
+        "image": "https://plus.unsplash.com/premium_photo-1663854478296-dd00b6257021?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "cuisine": "American",
+        "minute": "20 min"
+    },
+    {
+        "id": 7,
+        "title": "Falafel Wrap",
+        "image": "https://images.unsplash.com/photo-1649138783888-0ec9c3ec2f21?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "cuisine": "Middle Eastern",
+        "minute": "25 min"
+    },
+    {
+        "id": 8,
+        "title": "Bibimbap",
+        "image": "https://images.unsplash.com/photo-1590301157890-4810ed352733?q=80&w=1472&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "cuisine": "Korean",
+        "minute": "40 min"
+    }
+]
