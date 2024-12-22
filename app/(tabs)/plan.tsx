@@ -1,5 +1,6 @@
 import { Text, View, Pressable, FlatList, Image } from "react-native";
 import weeklyMeal from "@/constants/weeklyMeal.json";
+import { router } from "expo-router";
 
 // Transform data into an array
 const planData = Object.entries(weeklyMeal.week).map(([day, details]) => ({
@@ -11,34 +12,54 @@ const planData = Object.entries(weeklyMeal.week).map(([day, details]) => ({
 const Plan = () => {
     return (
         <View style={{ flex: 1, padding: 20, backgroundColor: "#eef5ff" }}>
-            <Text style={{ fontWeight: "bold", fontSize: 24, marginBottom: 20, color: "#34495e" }}>
-                Meal Plan
-            </Text>
-            <Pressable
+            <View
                 style={{
-                    backgroundColor: "#3498db",
-                    paddingVertical: 10,
-                    paddingHorizontal: 15,
-                    borderRadius: 20,
-                    alignSelf: "flex-end",
                     flexDirection: "row",
-                    alignItems: "center",
+                    width: "100%",
+                    marginTop: 20,
+                    marginBottom: 20,
+                    paddingHorizontal: 10,
                 }}
             >
-                <Image
-                    source={{
-                        uri: "https://img.icons8.com/ios-filled/50/ffffff/shopping-cart.png",
+                <Text
+                    style={{
+                        fontWeight: "bold",
+                        fontSize: 24,
+                        color: "#34495e",
+                        width: "80%",
                     }}
-                    style={{ width: 16, height: 16, marginRight: 8 }}
-                />
-                <Text style={{ color: "#fff", fontWeight: "bold" }}>Cart</Text>
-            </Pressable>
+                >
+                    Meal Plan
+                </Text>
+                <Pressable
+                    style={{
+                        backgroundColor: "#3498db",
+                        paddingVertical: 10,
+                        paddingHorizontal: 15,
+                        borderRadius: 20,
+                        alignSelf: "flex-end",
+                        flexDirection: "row",
+                        alignItems: "center",
+                    }}
+                    onPress={() => {
+                        router.push("/cart");
+                    }}
+                >
+                    <Image
+                        source={{
+                            uri: "https://img.icons8.com/ios-filled/50/ffffff/shopping-cart.png",
+                        }}
+                        style={{ width: 16, height: 16, marginRight: 8 }}
+                    />
+                    <Text style={{ color: "#fff", fontWeight: "bold" }}>Cart</Text>
+                </Pressable>
+            </View>
             <View
                 style={{
                     justifyContent: "center",
                     alignItems: "center",
                     marginTop: 20,
-                    paddingBottom: 70,
+                    paddingBottom: 60,
                 }}
             >
                 <FlatList

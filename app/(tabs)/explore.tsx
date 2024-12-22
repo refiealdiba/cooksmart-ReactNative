@@ -14,6 +14,7 @@ import { FontAwesome6, Ionicons, AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 import { api } from "@/api/api";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Explore = () => {
     const [randomRecipe, setRandomRecipe] = useState({
@@ -56,6 +57,7 @@ const Explore = () => {
 
     const fetchRandomRecipe = async () => {
         try {
+            // Kosongkan random recipe sebelum memuat data baru
             const response = await api.get("/recipes/random", {
                 params: {
                     number: 1,
@@ -287,18 +289,27 @@ const Explore = () => {
                                     borderRadius: 20,
                                 }}
                             />
-                            <Text
+                            <LinearGradient
+                                colors={["rgba(0,0,0,0)", "rgba(0,0,0,0.7)"]}
                                 style={{
                                     position: "absolute",
                                     bottom: 0,
-                                    color: "#fff",
-                                    padding: 20,
-                                    fontSize: 24,
-                                    fontWeight: "bold",
+                                    width: "100%",
+                                    borderBottomLeftRadius: 20,
+                                    borderBottomRightRadius: 20,
                                 }}
                             >
-                                {randomRecipe.title}
-                            </Text>
+                                <Text
+                                    style={{
+                                        color: "#fff",
+                                        padding: 20,
+                                        fontSize: 24,
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    {randomRecipe.title}
+                                </Text>
+                            </LinearGradient>
                         </Pressable>
                         <View
                             style={{
