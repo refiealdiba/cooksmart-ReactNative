@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Text, View, FlatList, StyleSheet, Pressable, Image } from "react-native";
 import { Link } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
+import { useFocusEffect } from "expo-router";
 
 import allRecipes from "@/constants/allRecipes.json";
 import { useSQLiteContext } from "expo-sqlite";
-// import { getFavorite } from "@/db/database";
 
 type favoriteRecipes = {
-    id: number;
+    id: string;
     title: string;
-    imageUrl: string;
+    image: string;
 };
 
 const Liked = () => {
@@ -19,17 +19,19 @@ const Liked = () => {
     const [favoriteRecipes, setFavoriteRecipes] = useState<favoriteRecipes[]>([]);
     const getFavorite = async () => {
         try {
-            const result = db.getAllAsync(`SELECT * FROM favoriterecipe;`);
-            setFavoriteRecipes(result as unknown as favoriteRecipes[]);
-            console.log("Favoriterecipes:", result);
+            const result = await db.getAllAsync("SELECT * FROM favoriterecipe;");
+            setFavoriteRecipes(result as favoriteRecipes[]);
         } catch (error) {
             console.error("Error getting favorite recipes:", error);
         }
     };
 
-    useEffect(() => {
-        getFavorite();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            getFavorite();
+            console.log("Favoriterecipes:", favoriteRecipes);
+        }, [])
+    );
 
     return (
         <View style={styles.container}>
@@ -47,7 +49,7 @@ const Liked = () => {
                         style={{ marginBottom: 20 }}
                     >
                         <View style={styles.card}>
-                            <Image source={{ uri: item.imageUrl }} style={styles.image} />
+                            <Image source={{ uri: item.image }} style={styles.image} />
                             <LinearGradient
                                 colors={["rgba(0,0,0,0)", "rgba(0,0,0,0.7)"]}
                                 style={styles.recipeTitle}

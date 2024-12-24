@@ -65,12 +65,12 @@ const Detail = () => {
     // Eksekusi menambah favorite ke database
     const db = useSQLiteContext();
     const [liked, setLiked] = useState(false);
-    const addFavoriteToDb = async (id: string) => {
+    const addFavoriteToDb = async (id: string, title: string, image: string) => {
         try {
             db.runAsync("INSERT INTO favoriterecipe (id, title, image) VALUES (?, ?, ?)", [
                 id,
-                recipe.title,
-                recipe.image,
+                title,
+                image,
             ]);
             console.log("Added to favorite");
             console.log("Added ID:", id);
@@ -120,14 +120,14 @@ const Detail = () => {
     //     }
     // };
 
-    const toggleFavorite = async (id: string) => {
+    const toggleFavorite = async (id: string, title: string, image: string) => {
         if (liked) {
             // Jika sudah di-favorite, hapus dari database
             await removeFavoriteFromDb(id);
             setLiked(false);
         } else {
             // Jika belum di-favorite, tambahkan ke database
-            await addFavoriteToDb(id);
+            await addFavoriteToDb(id, title, image);
             setLiked(true);
         }
     };
@@ -150,7 +150,9 @@ const Detail = () => {
             <View style={styles.container}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>{recipe.title}</Text>
-                    <Pressable onPress={() => toggleFavorite(id.toString())}>
+                    <Pressable
+                        onPress={() => toggleFavorite(id.toString(), recipe.title, recipe.image)}
+                    >
                         {liked ? (
                             <AntDesign name="heart" size={24} color="red" />
                         ) : (

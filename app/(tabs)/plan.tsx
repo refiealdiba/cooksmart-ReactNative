@@ -1,6 +1,6 @@
 import { Text, View, Pressable, FlatList, Image } from "react-native";
 import weeklyMeal from "@/constants/weeklyMeal.json";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 
 // Transform data into an array
 const planData = Object.entries(weeklyMeal.week).map(([day, details]) => ({
@@ -10,6 +10,7 @@ const planData = Object.entries(weeklyMeal.week).map(([day, details]) => ({
 }));
 
 const Plan = () => {
+    const router = useRouter();
     return (
         <View style={{ flex: 1, padding: 20, backgroundColor: "#eef5ff" }}>
             <View
@@ -87,6 +88,7 @@ const Plan = () => {
                                 shadowRadius: 5,
                                 elevation: 5,
                             }}
+                            onPress={() => router.push("/day/1")}
                         >
                             <Image
                                 source={{

@@ -114,9 +114,10 @@ const IngredientSearch = () => {
                     onPress={() => setModalVisible(true)}
                     style={{
                         backgroundColor: "#2278ed",
-                        width: 70,
+                        width: 90,
                         borderRadius: 5,
                         paddingHorizontal: 10,
+                        paddingVertical: 4,
                     }}
                 >
                     <Text
@@ -127,7 +128,7 @@ const IngredientSearch = () => {
                             textAlign: "center",
                         }}
                     >
-                        Add
+                        Search
                     </Text>
                 </Pressable>
                 {/* <Text>
