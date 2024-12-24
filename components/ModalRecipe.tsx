@@ -81,7 +81,7 @@ const ModalRecipes = ({ isVisible, onClose, data, type }: Props) => {
                                             </View>
                                             <View>
                                                 <Text style={styles.nutritionName}>
-                                                    {item.name}:
+                                                    {item.name}
                                                 </Text>
                                                 <Text>
                                                     {item.amount} {item.unit}

@@ -4,10 +4,11 @@ import { useLocalSearchParams } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import receipesInfo from "../../constants/recipesInfo.json";
 import ModalRecipes from "../../components/ModalRecipe";
+import { useSQLiteContext } from "expo-sqlite";
 
 import { api } from "../../api/api";
 
-const data = JSON.parse(JSON.stringify(receipesInfo));
+// const data = JSON.parse(JSON.stringify(receipesInfo));
 
 const Detail = () => {
     const { id } = useLocalSearchParams();
@@ -15,6 +16,7 @@ const Detail = () => {
     const [modalType, setModalType] = useState("");
     const [recipe, setRecipe] = useState({
         image: "",
+        title: "",
         extendedIngredients: [
             {
                 image: "",
@@ -59,8 +61,82 @@ const Detail = () => {
             setErrMsg(error.message);
         }
     };
+
+    // Eksekusi menambah favorite ke database
+    const db = useSQLiteContext();
+    const [liked, setLiked] = useState(false);
+    const addFavoriteToDb = async (id: string) => {
+        try {
+            db.runAsync("INSERT INTO favoriterecipe (id, title, image) VALUES (?, ?, ?)", [
+                id,
+                recipe.title,
+                recipe.image,
+            ]);
+            console.log("Added to favorite");
+            console.log("Added ID:", id);
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    };
+
+    const removeFavoriteFromDb = async (id: string) => {
+        try {
+            db.runAsync("DELETE FROM favoriterecipe WHERE id = ?", [id]);
+            console.log("Removed from favorite");
+            console.log("Removed ID:", id);
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    };
+
+    const checkFavorite = async (id: string) => {
+        try {
+            const result = await db.getFirstAsync("SELECT * FROM favoriterecipe WHERE id = ?", [
+                id,
+            ]);
+            if (result) {
+                setLiked(true); // Recipe sudah ada di favorite
+            } else {
+                setLiked(false); // Recipe belum ada di favorite
+            }
+            console.log("Check favorite:", result);
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    };
+
+    // Ekseskusi menambah bahan ke shopping cart
+    // const [added, setAdded] = useState(false);
+    // const addShoppingCart = async (id: string, name: string, quantity: number, unit: string) => {
+    //     try {
+    //         db.runAsync("INSERT INTO shoppingcart (id, name, quantity, unit) VALUES (?, ?, ?, ?)", [
+    //             id,
+    //             name,
+    //             quantity,
+    //             unit,
+    //         ]);
+    //     } catch (error: any) {
+    //         console.log(error.message);
+    //     }
+    // };
+
+    const toggleFavorite = async (id: string) => {
+        if (liked) {
+            // Jika sudah di-favorite, hapus dari database
+            await removeFavoriteFromDb(id);
+            setLiked(false);
+        } else {
+            // Jika belum di-favorite, tambahkan ke database
+            await addFavoriteToDb(id);
+            setLiked(true);
+        }
+    };
+
     useEffect(() => {
+        // Ambil id pertama jika berupa array
         fetchRecipeDetail();
+        checkFavorite(id.toString()); // Pastikan id utuh yang dikirim
+        console.log("ID recipe ori:", id.toString());
     }, []);
 
     return (
@@ -73,9 +149,13 @@ const Detail = () => {
             />
             <View style={styles.container}>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.title}>{data.title}</Text>
-                    <Pressable>
-                        <AntDesign name="heart" size={24} color="red" />
+                    <Text style={styles.title}>{recipe.title}</Text>
+                    <Pressable onPress={() => toggleFavorite(id.toString())}>
+                        {liked ? (
+                            <AntDesign name="heart" size={24} color="red" />
+                        ) : (
+                            <AntDesign name="hearto" size={24} color="red" />
+                        )}
                     </Pressable>
                 </View>
             </View>
@@ -243,7 +323,7 @@ const Detail = () => {
             <ModalRecipes
                 isVisible={isModalVisible}
                 onClose={handleCloseModal}
-                data={data}
+                data={recipe}
                 type={modalType}
             />
             <Pressable

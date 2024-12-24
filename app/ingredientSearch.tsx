@@ -143,6 +143,7 @@ const IngredientSearch = () => {
                 style={{ paddingHorizontal: 20, paddingBottom: 130, paddingTop: 10, marginTop: 10 }}
             >
                 <FlatList
+                    showsVerticalScrollIndicator={false}
                     data={searchResults}
                     renderItem={({ item }) => (
                         <Pressable

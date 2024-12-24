@@ -1,16 +1,42 @@
+import React, { useEffect, useState } from "react";
 import { Text, View, FlatList, StyleSheet, Pressable, Image } from "react-native";
 import { Link } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 
 import allRecipes from "@/constants/allRecipes.json";
+import { useSQLiteContext } from "expo-sqlite";
+// import { getFavorite } from "@/db/database";
+
+type favoriteRecipes = {
+    id: number;
+    title: string;
+    imageUrl: string;
+};
 
 const Liked = () => {
+    // Mengambil data favorite dari database
+    const db = useSQLiteContext();
+    const [favoriteRecipes, setFavoriteRecipes] = useState<favoriteRecipes[]>([]);
+    const getFavorite = async () => {
+        try {
+            const result = db.getAllAsync(`SELECT * FROM favoriterecipe;`);
+            setFavoriteRecipes(result as unknown as favoriteRecipes[]);
+            console.log("Favoriterecipes:", result);
+        } catch (error) {
+            console.error("Error getting favorite recipes:", error);
+        }
+    };
+
+    useEffect(() => {
+        getFavorite();
+    }, []);
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Recipes That You Liked</Text>
             <FlatList
                 showsVerticalScrollIndicator={false}
-                data={allRecipes}
+                data={favoriteRecipes}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
                     <Link
@@ -21,7 +47,7 @@ const Liked = () => {
                         style={{ marginBottom: 20 }}
                     >
                         <View style={styles.card}>
-                            <Image source={{ uri: item.image }} style={styles.image} />
+                            <Image source={{ uri: item.imageUrl }} style={styles.image} />
                             <LinearGradient
                                 colors={["rgba(0,0,0,0)", "rgba(0,0,0,0.7)"]}
                                 style={styles.recipeTitle}
@@ -35,6 +61,7 @@ const Liked = () => {
                 )}
                 contentContainerStyle={styles.listContent}
             />
+            {/* <Text>{getFavorite.id}</Text> */}
         </View>
     );
 };
