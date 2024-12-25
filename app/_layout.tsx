@@ -6,11 +6,13 @@ export default function RootLayout() {
         console.log("Creating database if needed...");
         try {
             await db.execAsync(
-                "CREATE TABLE IF NOT EXISTS favoriterecipe (id TEXT, title TEXT, image TEXT);"
+                `CREATE TABLE IF NOT EXISTS favoriterecipe (id TEXT, title TEXT, image TEXT);
+                CREATE TABLE IF NOT EXISTS cart(id TEXT, title TEXT, image TEXT, quantity TEXT, unit TEXT);
+                DELETE FROM cart;`
             );
             console.log("Database created successfully");
         } catch (e) {
-            console.error("Error creating database:");
+            console.error(`Error creating database:${e}`);
         }
     };
     return (

@@ -20,7 +20,7 @@ const Liked = () => {
     const getFavorite = async () => {
         try {
             const result = await db.getAllAsync("SELECT * FROM favoriterecipe;");
-            setFavoriteRecipes(result as favoriteRecipes[]);
+            await setFavoriteRecipes(result as favoriteRecipes[]);
         } catch (error) {
             console.error("Error getting favorite recipes:", error);
         }
@@ -63,7 +63,6 @@ const Liked = () => {
                 )}
                 contentContainerStyle={styles.listContent}
             />
-            {/* <Text>{getFavorite.id}</Text> */}
         </View>
     );
 };

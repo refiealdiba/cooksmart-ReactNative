@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { Modal, Text, View, FlatList, Pressable, StyleSheet, Image } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import recipesInfo from "@/constants/recipesInfo.json";
-
-// const data = JSON.parse(JSON.stringify(recipesInfo));
+import { useSQLiteContext } from "expo-sqlite";
 
 type Props = {
     isVisible: boolean;
@@ -13,6 +11,26 @@ type Props = {
 };
 
 const ModalRecipes = ({ isVisible, onClose, data, type }: Props) => {
+    const db = useSQLiteContext();
+    // Eksekusi menambah ingredient ke cart
+    const addIngredientToCart = async (
+        id: string,
+        title: string,
+        image: string,
+        quantity: string,
+        unit: string
+    ) => {
+        try {
+            const response = await db.runAsync(
+                "INSERT INTO cart (id, title, image, quantity, unit) VALUES(?, ?, ?, ?, ?)",
+                [id, title, image, quantity, unit]
+            );
+            console.log(`list ingredients: ${response}`);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     return (
         <Modal
             animationType="slide"
@@ -51,6 +69,7 @@ const ModalRecipes = ({ isVisible, onClose, data, type }: Props) => {
                             )}
                         />
                     ) : (
+                        // ingredients
                         <FlatList
                             showsVerticalScrollIndicator={false}
                             style={styles.scrollableList}
@@ -66,7 +85,14 @@ const ModalRecipes = ({ isVisible, onClose, data, type }: Props) => {
                                             alignItems: "center",
                                         }}
                                     >
-                                        <View style={{ flexDirection: "row", gap: 10 }}>
+                                        <View
+                                            style={{
+                                                flexDirection: "row",
+                                                gap: 10,
+                                                width: "70%",
+                                                alignItems: "center",
+                                            }}
+                                        >
                                             <View style={{ width: 60, height: 60 }}>
                                                 <Image
                                                     source={{
@@ -88,7 +114,17 @@ const ModalRecipes = ({ isVisible, onClose, data, type }: Props) => {
                                                 </Text>
                                             </View>
                                         </View>
-                                        <Pressable>
+                                        <Pressable
+                                            onPress={() => {
+                                                addIngredientToCart(
+                                                    item.id,
+                                                    item.name,
+                                                    item.image,
+                                                    item.amount.toString(),
+                                                    item.unit
+                                                );
+                                            }}
+                                        >
                                             <Text>Add Cart</Text>
                                         </Pressable>
                                     </View>

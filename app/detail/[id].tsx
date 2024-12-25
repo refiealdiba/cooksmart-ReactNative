@@ -2,13 +2,10 @@ import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, Image, StyleSheet, Pressable, FlatList } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
-import receipesInfo from "../../constants/recipesInfo.json";
-import ModalRecipes from "../../components/ModalRecipe";
 import { useSQLiteContext } from "expo-sqlite";
-
 import { api } from "../../api/api";
 
-// const data = JSON.parse(JSON.stringify(receipesInfo));
+import ModalRecipes from "../../components/ModalRecipe";
 
 const Detail = () => {
     const { id } = useLocalSearchParams();
@@ -67,7 +64,7 @@ const Detail = () => {
     const [liked, setLiked] = useState(false);
     const addFavoriteToDb = async (id: string, title: string, image: string) => {
         try {
-            db.runAsync("INSERT INTO favoriterecipe (id, title, image) VALUES (?, ?, ?)", [
+            await db.runAsync("INSERT INTO favoriterecipe (id, title, image) VALUES (?, ?, ?)", [
                 id,
                 title,
                 image,
@@ -79,9 +76,10 @@ const Detail = () => {
         }
     };
 
+    // Menghapus recipe dari favorite DB
     const removeFavoriteFromDb = async (id: string) => {
         try {
-            db.runAsync("DELETE FROM favoriterecipe WHERE id = ?", [id]);
+            await db.runAsync("DELETE FROM favoriterecipe WHERE id = ?", [id]);
             console.log("Removed from favorite");
             console.log("Removed ID:", id);
         } catch (error: any) {
@@ -105,21 +103,6 @@ const Detail = () => {
         }
     };
 
-    // Ekseskusi menambah bahan ke shopping cart
-    // const [added, setAdded] = useState(false);
-    // const addShoppingCart = async (id: string, name: string, quantity: number, unit: string) => {
-    //     try {
-    //         db.runAsync("INSERT INTO shoppingcart (id, name, quantity, unit) VALUES (?, ?, ?, ?)", [
-    //             id,
-    //             name,
-    //             quantity,
-    //             unit,
-    //         ]);
-    //     } catch (error: any) {
-    //         console.log(error.message);
-    //     }
-    // };
-
     const toggleFavorite = async (id: string, title: string, image: string) => {
         if (liked) {
             // Jika sudah di-favorite, hapus dari database
@@ -133,7 +116,6 @@ const Detail = () => {
     };
 
     useEffect(() => {
-        // Ambil id pertama jika berupa array
         fetchRecipeDetail();
         checkFavorite(id.toString()); // Pastikan id utuh yang dikirim
         console.log("ID recipe ori:", id.toString());
@@ -173,7 +155,6 @@ const Detail = () => {
                     scrollEnabled={true}
                     data={recipe.diets}
                     horizontal
-                    // style={{ flexDirection: "row", gap: 10 }}
                     renderItem={({ item }) => (
                         <Text
                             style={{
