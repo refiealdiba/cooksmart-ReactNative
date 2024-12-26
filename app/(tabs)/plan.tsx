@@ -1,6 +1,9 @@
+import { useCallback, useEffect, useState } from "react";
 import { Text, View, Pressable, FlatList, Image } from "react-native";
 import weeklyMeal from "@/constants/weeklyMeal.json";
 import { useRouter } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
+import { useFocusEffect } from "expo-router";
 
 // Transform data into an array
 const planData = Object.entries(weeklyMeal.week).map(([day, details]) => ({
@@ -9,8 +12,42 @@ const planData = Object.entries(weeklyMeal.week).map(([day, details]) => ({
     nutrients: details.nutrients,
 }));
 
+type Plan = {
+    id: string;
+    day: string;
+    sumcal: string;
+    sumprot: string;
+};
+
 const Plan = () => {
     const router = useRouter();
+    // Eksekusi mengambil semua data recipe
+    const [plans, setPlans] = useState<Plan[]>([]);
+    const db = useSQLiteContext();
+    const getAllPlanInfo = async () => {
+        try {
+            const response = await db.getAllAsync("SELECT * FROM mealplan");
+            setPlans(response as Plan[]);
+            console.log("succes getting all info");
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const getAllPlanByIdDay = async (idday: string) => {
+        try {
+            await db.getAllAsync("SELECT * FROM mealplanrecipes WHERE idday = ?", idday);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            getAllPlanInfo();
+        }, [])
+    );
+
     return (
         <View style={{ flex: 1, padding: 20, backgroundColor: "#eef5ff" }}>
             <View
@@ -68,7 +105,7 @@ const Plan = () => {
                     scrollEnabled={true}
                     numColumns={2}
                     key={1}
-                    data={planData}
+                    data={plans}
                     keyExtractor={(item) => item.day}
                     renderItem={({ item }) => (
                         <Pressable
@@ -100,10 +137,10 @@ const Plan = () => {
                                 {item.day.toUpperCase()}
                             </Text>
                             <Text style={{ fontSize: 13, color: "#34495e", marginTop: 8 }}>
-                                Calories: {Math.round(item.nutrients.calories)}
+                                Calories: {item.sumcal}
                             </Text>
                             <Text style={{ fontSize: 12, color: "#7f8c8d", marginTop: 4 }}>
-                                Protein: {Math.round(item.nutrients.protein)}g
+                                Protein: {item.sumprot}g
                             </Text>
                         </Pressable>
                     )}

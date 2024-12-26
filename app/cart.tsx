@@ -92,98 +92,115 @@ const Cart = () => {
                     <Text style={{ color: "#fff" }}>Explore</Text>
                 </Pressable>
             </View>
-            <View style={{ paddingHorizontal: 20, marginBottom: 10 }}>
-                <Pressable
-                    style={{
-                        backgroundColor: "red",
-                        paddingHorizontal: 10,
-                        paddingVertical: 4,
-                        width: 80,
-                        borderRadius: 5,
-                    }}
-                    onPress={() => {
-                        console.log("handle delete all ingredient from db");
-                        removeAllIngredients();
-                        getAllIngredientsFromDb();
-                    }}
-                >
-                    <Text style={{ textAlign: "center", color: "white" }}>Clear All</Text>
-                </Pressable>
-            </View>
-            <FlatList
-                style={{ paddingBottom: 20, paddingHorizontal: 20 }}
-                data={ingredients}
-                renderItem={({ item }) => (
-                    <View
-                        style={{
-                            width: "100%",
-                            marginBottom: 20,
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            gap: 10,
-                        }}
-                    >
-                        <View
-                            style={{
-                                flex: 1,
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                paddingHorizontal: 14,
-                                paddingVertical: 10,
-                                borderRadius: 10,
-                                backgroundColor: "#fff",
-                                boxShadow: "2px 14px 30px -9px rgba(0,0,0,0.48)",
-                            }}
-                        >
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    gap: 15,
-                                    maxWidth: "60%",
-                                }}
-                            >
-                                <Image
-                                    source={{
-                                        uri: `https://img.spoonacular.com/ingredients_100x100/${item.image}`,
-                                    }}
-                                    style={{
-                                        width: 80,
-                                        height: 80,
-                                        backgroundColor: "#fff",
-                                        borderRadius: 50,
-                                        objectFit: "contain",
-                                        borderWidth: 1.5,
-                                        borderColor: "#2278ed",
-                                    }}
-                                />
-                                <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-                                    {item.title}
-                                </Text>
-                            </View>
-                            <Text>
-                                {item.quantity} {item.unit}
-                            </Text>
-                        </View>
+            {ingredients.length > 0 ? (
+                <>
+                    <View style={{ paddingHorizontal: 20, marginBottom: 10 }}>
                         <Pressable
                             style={{
-                                borderRadius: "50%",
-                                backgroundColor: "#e8baba",
-                                padding: 5,
+                                backgroundColor: "red",
+                                paddingHorizontal: 10,
+                                paddingVertical: 4,
+                                width: 80,
+                                borderRadius: 5,
                             }}
                             onPress={() => {
-                                console.log("handle delete single ingredient from db");
-                                removeSingleIngredient(item.id.toString());
+                                console.log("handle delete all ingredient from db");
+                                removeAllIngredients();
                                 getAllIngredientsFromDb();
                             }}
                         >
-                            <Ionicons name="close-outline" size={24} color="red" />
+                            <Text style={{ textAlign: "center", color: "white" }}>Clear All</Text>
                         </Pressable>
                     </View>
-                )}
-            />
+                    <FlatList
+                        style={{ paddingBottom: 20, paddingHorizontal: 20 }}
+                        data={ingredients}
+                        renderItem={({ item }) => (
+                            <View
+                                style={{
+                                    width: "100%",
+                                    marginBottom: 20,
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    gap: 10,
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: "row",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        paddingHorizontal: 14,
+                                        paddingVertical: 10,
+                                        borderRadius: 10,
+                                        backgroundColor: "#fff",
+                                        boxShadow: "2px 14px 30px -9px rgba(0,0,0,0.48)",
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            gap: 15,
+                                            maxWidth: "60%",
+                                        }}
+                                    >
+                                        <Image
+                                            source={{
+                                                uri: `https://img.spoonacular.com/ingredients_100x100/${item.image}`,
+                                            }}
+                                            style={{
+                                                width: 80,
+                                                height: 80,
+                                                backgroundColor: "#fff",
+                                                borderRadius: 50,
+                                                objectFit: "contain",
+                                                borderWidth: 1.5,
+                                                borderColor: "#2278ed",
+                                            }}
+                                        />
+                                        <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+                                            {item.title}
+                                        </Text>
+                                    </View>
+                                    <Text>
+                                        {item.quantity} {item.unit}
+                                    </Text>
+                                </View>
+                                <Pressable
+                                    style={{
+                                        borderRadius: "50%",
+                                        backgroundColor: "#e8baba",
+                                        padding: 5,
+                                    }}
+                                    onPress={() => {
+                                        console.log("handle delete single ingredient from db");
+                                        removeSingleIngredient(item.id.toString());
+                                        getAllIngredientsFromDb();
+                                    }}
+                                >
+                                    <Ionicons name="close-outline" size={24} color="red" />
+                                </Pressable>
+                            </View>
+                        )}
+                    />
+                </>
+            ) : (
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                    <Text
+                        style={{
+                            textAlign: "center",
+                            fontWeight: "bold",
+                            fontSize: 20,
+                            color: "gray",
+                        }}
+                    >
+                        Found nothing in your cart
+                    </Text>
+                </View>
+            )}
         </View>
     );
 };

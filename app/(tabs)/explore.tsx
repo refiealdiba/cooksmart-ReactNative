@@ -12,9 +12,9 @@ import {
 } from "react-native";
 import { FontAwesome6, Ionicons, AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-
-import { api } from "@/api/api";
 import { LinearGradient } from "expo-linear-gradient";
+import { api } from "@/api/api";
+import { useSQLiteContext } from "expo-sqlite";
 
 const Explore = () => {
     const [randomRecipe, setRandomRecipe] = useState({
@@ -53,7 +53,7 @@ const Explore = () => {
         "primal",
         "low fodmap",
         "whole30",
-    ]; // Dummy items
+    ]; // Diet items
 
     const fetchRandomRecipe = async () => {
         try {
@@ -84,7 +84,8 @@ const Explore = () => {
     };
 
     useEffect(() => {
-        fetchRandomRecipe(); // Memuat random recipe saat komponen dirender pertama kali
+        fetchRandomRecipe();
+        checkFavorite(randomRecipe.id.toString()); // Memuat random recipe saat komponen dirender pertama kali
     }, []);
 
     useEffect(() => {
@@ -99,6 +100,70 @@ const Explore = () => {
     const handlerModalFilter = () => {
         setFilterModalVisible(!filterModalVisible);
     };
+
+    // Eksekusi add DB
+    const db = useSQLiteContext();
+    const [liked, setLiked] = useState(false);
+    const addFavoriteToDb = async (id: string, title: string, image: string) => {
+        try {
+            await db.runAsync("INSERT INTO favoriterecipe (id, title, image) VALUES (?, ?, ?)", [
+                id,
+                title,
+                image,
+            ]);
+            console.log("Added to favorite");
+            console.log("Added ID:", id);
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    };
+
+    const removeFavoriteFromDb = async (id: string) => {
+        try {
+            await db.runAsync("DELETE FROM favoriterecipe WHERE id = ?", [id]);
+            console.log("Removed from favorite");
+            console.log("Removed ID:", id);
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    };
+
+    const checkFavorite = async (id: string) => {
+        try {
+            const result = await db.getFirstAsync("SELECT * FROM favoriterecipe WHERE id = ?", [
+                id,
+            ]);
+            if (result) {
+                setLiked(true); // Recipe sudah ada di favorite
+            } else {
+                setLiked(false); // Recipe belum ada di favorite
+            }
+            console.log("Check favorite:", result);
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    };
+
+    const toggleFavorite = async (id: string, title: string, image: string) => {
+        try {
+            if (liked) {
+                // Jika sudah di-favorite, hapus dari database
+                await removeFavoriteFromDb(id);
+                setLiked(false);
+            } else {
+                // Jika belum di-favorite, tambahkan ke database
+                await addFavoriteToDb(id, title, image);
+                setLiked(true);
+            }
+            setTimeout(() => {
+                fetchRandomRecipe(); // Fetch data baru setelah 1 detik
+                setLiked(false);
+            }, 700);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     return (
         <ScrollView style={styles.rootContainer}>
             <View
@@ -211,10 +276,6 @@ const Explore = () => {
                     marginBottom: 30,
                 }}
             >
-                {/* <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 5 }}>
-                    How About This
-                </Text>
-                <Text>Or</Text> */}
                 <Pressable
                     style={{
                         backgroundColor: "#2278ed",
@@ -323,16 +384,26 @@ const Explore = () => {
                             <Pressable
                                 onPress={() => {
                                     fetchRandomRecipe();
+                                    console.log("handle only looking for new recipe");
                                 }}
                             >
                                 <Ionicons name="close" size={40} color="gray" />
                             </Pressable>
                             <Pressable
-                                onPress={() => {
-                                    fetchRandomRecipe();
+                                onPress={async () => {
+                                    await toggleFavorite(
+                                        randomRecipe.id.toString(),
+                                        randomRecipe.title,
+                                        randomRecipe.image
+                                    );
+                                    console.log("handle add recipe to fav");
                                 }}
                             >
-                                <AntDesign name="heart" size={35} color="#ff0000" />
+                                {liked ? (
+                                    <AntDesign name="heart" size={35} color="red" />
+                                ) : (
+                                    <AntDesign name="hearto" size={35} color="red" />
+                                )}
                             </Pressable>
                         </View>
                     </>
@@ -347,7 +418,6 @@ const styles = StyleSheet.create({
         flex: 1,
         position: "relative",
         padding: 20,
-        // paddingTop: 0,
         backgroundColor: "#eef5ff",
     },
     container: {

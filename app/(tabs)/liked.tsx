@@ -1,10 +1,7 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { Text, View, FlatList, StyleSheet, Pressable, Image } from "react-native";
-import { Link } from "expo-router";
+import { Link, useFocusEffect } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from "expo-router";
-
-import allRecipes from "@/constants/allRecipes.json";
 import { useSQLiteContext } from "expo-sqlite";
 
 type favoriteRecipes = {
@@ -20,16 +17,17 @@ const Liked = () => {
     const getFavorite = async () => {
         try {
             const result = await db.getAllAsync("SELECT * FROM favoriterecipe;");
-            await setFavoriteRecipes(result as favoriteRecipes[]);
+            setFavoriteRecipes(result as favoriteRecipes[]);
+            console.log("succes to get recipes from db");
         } catch (error) {
             console.error("Error getting favorite recipes:", error);
         }
     };
 
+    // Refresh setiap kali halaman dibuka
     useFocusEffect(
         useCallback(() => {
             getFavorite();
-            console.log("Favoriterecipes:", favoriteRecipes);
         }, [])
     );
 

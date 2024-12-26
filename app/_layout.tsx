@@ -8,7 +8,9 @@ export default function RootLayout() {
             await db.execAsync(
                 `CREATE TABLE IF NOT EXISTS favoriterecipe (id TEXT, title TEXT, image TEXT);
                 CREATE TABLE IF NOT EXISTS cart(id TEXT, title TEXT, image TEXT, quantity TEXT, unit TEXT);
-                DELETE FROM cart;`
+                CREATE TABLE IF NOT EXISTS mealplan(id TEXT, day TEXT, sumcal TEXT, sumprot TEXT);
+                CREATE TABLE IF NOT EXISTS mealplanrecipes(id TEXT, idday TEXT, title TEXT, image TEXT, calories TEXT, proteins TEXT, FOREIGN KEY(idday) REFERENCES mealplan(id));
+                `
             );
             console.log("Database created successfully");
         } catch (e) {

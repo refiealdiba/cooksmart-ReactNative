@@ -121,6 +121,26 @@ const Detail = () => {
         console.log("ID recipe ori:", id.toString());
     }, []);
 
+    // Ekseskusi menambah ke meal plan
+    const addToMealPlanDb = async (
+        id: string,
+        idDay: string,
+        title: string,
+        image: string,
+        calories: string,
+        protein: string
+    ) => {
+        try {
+            await db.runAsync(
+                "INSERT INTO mealplanrecipes (id, idday, title, image, calories, proteins) VALUES(?,?,?,?,?,?)",
+                [id, idDay, title, image, calories, protein]
+            );
+            console.log(`${id} Added to DB`);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     return (
         <ScrollView style={styles.rootContainer}>
             <Image
@@ -317,6 +337,16 @@ const Detail = () => {
                     backgroundColor: "#fff",
                     width: 100,
                 }}
+                onPress={() =>
+                    addToMealPlanDb(
+                        id.toString(),
+                        "1",
+                        recipe.title,
+                        recipe.image,
+                        recipe.nutrition.nutrients[0].amount.toString(),
+                        recipe.nutrition.nutrients[10].amount.toString()
+                    )
+                }
             >
                 <Text>Add to Plan</Text>
             </Pressable>

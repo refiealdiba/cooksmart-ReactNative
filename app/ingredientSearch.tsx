@@ -131,14 +131,6 @@ const IngredientSearch = () => {
                         Search
                     </Text>
                 </Pressable>
-                {/* <Text>
-                    {ingredientsList.map((item, index) => (
-                        <Text key={index}>
-                            {item}
-                            {index !== ingredientsList.length - 1 ? ", " : ""}
-                        </Text>
-                    ))}
-                </Text> */}
             </View>
             <View
                 style={{ paddingHorizontal: 20, paddingBottom: 130, paddingTop: 10, marginTop: 10 }}
