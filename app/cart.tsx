@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View, Text, FlatList, Image, Pressable } from "react-native";
+import { View, Text, FlatList, Image, Pressable, StyleSheet } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -15,8 +15,8 @@ type Ingredient = {
 const Cart = () => {
     // Ekseskusi untuk mendapatkan semua ingredients di DB
     const router = useRouter();
-    const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const db = useSQLiteContext();
+    const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const getAllIngredientsFromDb = async () => {
         try {
             const response = await db.getAllAsync("SELECT * FROM cart");
@@ -48,17 +48,8 @@ const Cart = () => {
     }, []);
 
     return (
-        <View style={{ flex: 1 }}>
-            <View
-                style={{
-                    width: "100%",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginTop: 30,
-                    marginBottom: 10,
-                }}
-            >
+        <View style={styles.container}>
+            <View style={styles.title}>
                 <MaterialCommunityIcons
                     name="cart"
                     size={40}
@@ -69,16 +60,7 @@ const Cart = () => {
                     Cart
                 </Text>
             </View>
-            <View
-                style={{
-                    width: "100%",
-                    marginBottom: 30,
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: 4,
-                }}
-            >
+            <View style={styles.subtitle}>
                 <Text>Want to add some ingredient?</Text>
                 <Pressable
                     style={{
@@ -96,13 +78,7 @@ const Cart = () => {
                 <>
                     <View style={{ paddingHorizontal: 20, marginBottom: 10 }}>
                         <Pressable
-                            style={{
-                                backgroundColor: "red",
-                                paddingHorizontal: 10,
-                                paddingVertical: 4,
-                                width: 80,
-                                borderRadius: 5,
-                            }}
+                            style={styles.btnClear}
                             onPress={() => {
                                 console.log("handle delete all ingredient from db");
                                 removeAllIngredients();
@@ -204,5 +180,34 @@ const Cart = () => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    title: {
+        width: "100%",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 30,
+        marginBottom: 10,
+    },
+    subtitle: {
+        width: "100%",
+        marginBottom: 30,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 4,
+    },
+    btnClear: {
+        backgroundColor: "red",
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        width: 80,
+        borderRadius: 5,
+    },
+});
 
 export default Cart;

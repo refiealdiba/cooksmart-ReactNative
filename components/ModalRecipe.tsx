@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal, Text, View, FlatList, Pressable, StyleSheet, Image } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useSQLiteContext } from "expo-sqlite";
 
 type Props = {
@@ -10,7 +10,20 @@ type Props = {
     type: string;
 };
 
-const ModalRecipes = ({ isVisible, onClose, data, type }: Props) => {
+type Day = {
+    id: string;
+    day: string;
+};
+
+type Ingredient = {
+    id: string;
+    title: string;
+    image: string;
+    quantity: string;
+    unit: string;
+};
+
+const ModalRecipes = ({ isVisible, onClose, data = "", type }: Props) => {
     const db = useSQLiteContext();
     // Eksekusi menambah ingredient ke cart
     const addIngredientToCart = async (
@@ -30,7 +43,65 @@ const ModalRecipes = ({ isVisible, onClose, data, type }: Props) => {
             console.log(e);
         }
     };
+    // Mengambil data days
+    const [days, setDays] = useState<Day[]>([]);
+    const getAllDays = async () => {
+        try {
+            const response = await db.getAllAsync("SELECT id, day FROM mealplan");
+            setDays(response as Day[]);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+    useEffect(() => {
+        getAllDays();
+    });
 
+    // Ekseskusi menambah ke meal plan
+    const addToMealPlanDb = async (
+        id: string,
+        idDay: string,
+        title: string,
+        image: string,
+        calories: string,
+        protein: string
+    ) => {
+        try {
+            await db.runAsync(
+                "INSERT INTO mealplanrecipes (id, idday, title, image, calories, proteins) VALUES(?,?,?,?,?,?)",
+                [id, idDay, title, image, calories, protein]
+            );
+            console.log(`${id} Added to DB day ${idDay}`);
+            onClose();
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    // Mengecek Cart
+    const checkCart = async (
+        id: string,
+        title: string,
+        image: string,
+        quantity: string,
+        unit: string
+    ) => {
+        try {
+            const response = await db.getFirstAsync<Ingredient>("SELECT * FROM cart WHERE id = ?", [
+                id,
+            ]);
+            if (response) {
+                await db.runAsync("UPDATE cart SET quantity = ? WHERE id = ?", [
+                    parseInt(response.quantity) + parseInt(quantity),
+                    id,
+                ]);
+            } else {
+                addIngredientToCart(id, title, image, quantity, unit);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    };
     return (
         <Modal
             animationType="slide"
@@ -42,18 +113,20 @@ const ModalRecipes = ({ isVisible, onClose, data, type }: Props) => {
                 <View style={styles.cardContainer}>
                     {/* Header Modal */}
                     <View style={styles.cardHeader}>
-                        {type === "nutrients" ? (
+                        {type === "nutrients" && (
                             <Text style={styles.cardHeaderTitle}>Nutrients</Text>
-                        ) : (
+                        )}
+                        {type === "ingredients" && (
                             <Text style={styles.cardHeaderTitle}>Ingredients</Text>
                         )}
+                        {type === "plan" && <Text style={styles.cardHeaderTitle}>Plan</Text>}
                         <Pressable onPress={onClose}>
                             <AntDesign name="close" size={24} color="black" />
                         </Pressable>
                     </View>
 
                     {/* List Nutrients */}
-                    {type === "nutrients" ? (
+                    {type === "nutrients" && (
                         <FlatList
                             showsVerticalScrollIndicator={false}
                             style={styles.scrollableList}
@@ -68,8 +141,8 @@ const ModalRecipes = ({ isVisible, onClose, data, type }: Props) => {
                                 </View>
                             )}
                         />
-                    ) : (
-                        // ingredients
+                    )}
+                    {type === "ingredients" && (
                         <FlatList
                             showsVerticalScrollIndicator={false}
                             style={styles.scrollableList}
@@ -116,7 +189,7 @@ const ModalRecipes = ({ isVisible, onClose, data, type }: Props) => {
                                         </View>
                                         <Pressable
                                             onPress={() => {
-                                                addIngredientToCart(
+                                                checkCart(
                                                     item.id,
                                                     item.name,
                                                     item.image,
@@ -125,9 +198,38 @@ const ModalRecipes = ({ isVisible, onClose, data, type }: Props) => {
                                                 );
                                             }}
                                         >
-                                            <Text>Add Cart</Text>
+                                            <MaterialCommunityIcons
+                                                name="cart-plus"
+                                                size={24}
+                                                color="#2278ed"
+                                            />
                                         </Pressable>
                                     </View>
+                                </View>
+                            )}
+                        />
+                    )}
+                    {type === "plan" && (
+                        <FlatList
+                            data={days}
+                            keyExtractor={(item, index) => `${item.id}-${index}`}
+                            renderItem={({ item }) => (
+                                <View style={styles.listContainer}>
+                                    <Pressable
+                                        onPress={() => {
+                                            console.log(`pressing ${item.day}`);
+                                            addToMealPlanDb(
+                                                data.id.toString(),
+                                                item.id.toString(),
+                                                data.title,
+                                                data.image,
+                                                data.nutrition.nutrients[0].amount.toString(),
+                                                data.nutrition.nutrients[10].amount.toString()
+                                            );
+                                        }}
+                                    >
+                                        <Text>{item.day}</Text>
+                                    </Pressable>
                                 </View>
                             )}
                         />

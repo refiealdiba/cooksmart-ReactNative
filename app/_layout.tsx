@@ -6,10 +6,11 @@ export default function RootLayout() {
         console.log("Creating database if needed...");
         try {
             await db.execAsync(
-                `CREATE TABLE IF NOT EXISTS favoriterecipe (id TEXT, title TEXT, image TEXT);
-                CREATE TABLE IF NOT EXISTS cart(id TEXT, title TEXT, image TEXT, quantity TEXT, unit TEXT);
-                CREATE TABLE IF NOT EXISTS mealplan(id TEXT, day TEXT, sumcal TEXT, sumprot TEXT);
-                CREATE TABLE IF NOT EXISTS mealplanrecipes(id TEXT, idday TEXT, title TEXT, image TEXT, calories TEXT, proteins TEXT, FOREIGN KEY(idday) REFERENCES mealplan(id));
+                `
+                CREATE TABLE IF NOT EXISTS favoriterecipe (id INTEGER, title TEXT, image TEXT);
+                CREATE TABLE IF NOT EXISTS cart(id INTEGER, title TEXT, image TEXT, quantity INTEGER, unit TEXT);
+                CREATE TABLE IF NOT EXISTS mealplan(id INTEGER, day TEXT, sumcal INTEGER, sumprot INTEGER);
+                CREATE TABLE IF NOT EXISTS mealplanrecipes(id INTEGER, idday INTEGER, title TEXT, image TEXT, calories INTEGER, proteins INTEGER, FOREIGN KEY(idday) REFERENCES mealplan(id));                                           
                 `
             );
             console.log("Database created successfully");

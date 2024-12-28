@@ -4,8 +4,6 @@ import { useRouter } from "expo-router";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { api } from "@/api/api";
 
-import INGREDIENTS_DATA from "@/constants/listIngredients.json";
-
 const IngredientSearch = () => {
     const [searchResults, setSearchResults] = useState([
         {
@@ -16,13 +14,6 @@ const IngredientSearch = () => {
     ]);
     const [modalVisible, setModalVisible] = useState(false);
     const [ingredientsList, setIngredientsList] = useState<string[]>([]);
-    const [suggestions, setSuggestions] = useState([
-        {
-            id: "",
-            name: "",
-        },
-    ]);
-    const [activeInputIndex, setActiveInputIndex] = useState(0);
 
     const handleAddField = () => {
         setIngredientsList([...ingredientsList, ""]);
@@ -37,26 +28,6 @@ const IngredientSearch = () => {
         const updatedList = [...ingredientsList];
         updatedList[index] = text;
         setIngredientsList(updatedList);
-        filterSuggestions(text);
-        setActiveInputIndex(index);
-    };
-
-    const filterSuggestions = (text: string) => {
-        if (text.length > 0) {
-            const filtered = INGREDIENTS_DATA.filter((item) =>
-                item.name.toLowerCase().includes(text.toLowerCase())
-            );
-            setSuggestions(filtered);
-        } else {
-            setSuggestions([]);
-        }
-    };
-
-    const handleSelectSuggestion = (name: string) => {
-        const updatedList = [...ingredientsList];
-        updatedList[activeInputIndex] = name;
-        setIngredientsList(updatedList);
-        setSuggestions([]);
     };
 
     const fetchSearchIngredients = async () => {
@@ -76,7 +47,6 @@ const IngredientSearch = () => {
 
     useEffect(() => {
         setSearchResults([]);
-        setSuggestions([]);
     }, []);
 
     return (
@@ -206,29 +176,6 @@ const IngredientSearch = () => {
                                 >
                                     <Text style={{ color: "white", fontWeight: "bold" }}>-</Text>
                                 </Pressable>
-                                <View
-                                    style={{
-                                        position: "absolute",
-                                        maxHeight: 200,
-                                        backgroundColor: "#fff",
-                                        top: 40,
-                                        zIndex: 1,
-                                    }}
-                                >
-                                    <FlatList
-                                        data={suggestions}
-                                        renderItem={({ item }) => (
-                                            <Pressable
-                                                onPress={() => handleSelectSuggestion(item.name)}
-                                            >
-                                                <Text style={styles.suggestionItem}>
-                                                    {item.name}
-                                                </Text>
-                                            </Pressable>
-                                        )}
-                                        keyExtractor={(item) => item.id.toString()}
-                                    />
-                                </View>
                             </View>
                         ))}
 
@@ -258,16 +205,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
-    suggestionItem: {
-        padding: 10,
-        borderBottomWidth: 1,
-        borderColor: "#ddd",
-    },
     inputContainer: {
         flexDirection: "row",
         alignItems: "center",
         marginBottom: 10,
-        position: "relative",
     },
     input: {
         flex: 1,

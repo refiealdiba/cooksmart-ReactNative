@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View, Text, ScrollView, Image, StyleSheet, Pressable, FlatList } from "react-native";
-import { useLocalSearchParams } from "expo-router";
-import { AntDesign } from "@expo/vector-icons";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useSQLiteContext } from "expo-sqlite";
 import { api } from "../../api/api";
 
@@ -59,7 +59,7 @@ const Detail = () => {
         }
     };
 
-    // Eksekusi menambah favorite ke database
+    // Eksekusi menambah favorite ke likde database
     const db = useSQLiteContext();
     const [liked, setLiked] = useState(false);
     const addFavoriteToDb = async (id: string, title: string, image: string) => {
@@ -115,27 +115,37 @@ const Detail = () => {
         }
     };
 
-    useEffect(() => {
-        fetchRecipeDetail();
-        checkFavorite(id.toString()); // Pastikan id utuh yang dikirim
-        console.log("ID recipe ori:", id.toString());
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            fetchRecipeDetail();
+            checkFavorite(id.toString());
+            checkMealPlanDb(id.toString()); // Pastikan id utuh yang dikirim
+            console.log("ID recipe ori:", id.toString());
+        }, [isModalVisible])
+    );
 
-    // Ekseskusi menambah ke meal plan
-    const addToMealPlanDb = async (
-        id: string,
-        idDay: string,
-        title: string,
-        image: string,
-        calories: string,
-        protein: string
-    ) => {
+    // Eksekusi check data dan hapus data dari mealplan
+    const [added, setAdded] = useState<boolean>(false);
+    const removeMealPlanDb = async (id: string) => {
         try {
-            await db.runAsync(
-                "INSERT INTO mealplanrecipes (id, idday, title, image, calories, proteins) VALUES(?,?,?,?,?,?)",
-                [id, idDay, title, image, calories, protein]
-            );
-            console.log(`${id} Added to DB`);
+            await db.runAsync("DELETE FROM mealplanrecipes WHERE id = ?", [id]);
+            setAdded(false);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const checkMealPlanDb = async (id: string) => {
+        try {
+            const response = await db.getFirstAsync("SELECT * FROM mealplanrecipes WHERE id = ?", [
+                id,
+            ]);
+
+            if (response) {
+                setAdded(true);
+            } else {
+                setAdded(false);
+            }
         } catch (e) {
             console.log(e);
         }
@@ -334,21 +344,26 @@ const Detail = () => {
                     position: "absolute",
                     right: 20,
                     top: 20,
-                    backgroundColor: "#fff",
-                    width: 100,
+                    backgroundColor: "rgba(255, 255, 255, 0.8)",
+                    alignItems: "center",
+                    padding: 7,
+                    borderRadius: 10,
                 }}
-                onPress={() =>
-                    addToMealPlanDb(
-                        id.toString(),
-                        "1",
-                        recipe.title,
-                        recipe.image,
-                        recipe.nutrition.nutrients[0].amount.toString(),
-                        recipe.nutrition.nutrients[10].amount.toString()
-                    )
-                }
+                onPress={() => {
+                    if (!added) {
+                        // Jika belum ada di meal plan
+                        handleOpenModal("plan"); // Modal untuk menambahkan
+                    } else {
+                        // Jika sudah ada, hapus dari meal plan
+                        removeMealPlanDb(id.toString());
+                    }
+                }}
             >
-                <Text>Add to Plan</Text>
+                {added ? (
+                    <MaterialCommunityIcons name="clipboard-remove" size={24} color="red" />
+                ) : (
+                    <MaterialCommunityIcons name="clipboard-plus" size={24} color="#2278ed" />
+                )}
             </Pressable>
         </ScrollView>
     );

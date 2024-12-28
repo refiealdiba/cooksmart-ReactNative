@@ -1,16 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Text, View, Pressable, FlatList, Image } from "react-native";
-import weeklyMeal from "@/constants/weeklyMeal.json";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useFocusEffect } from "expo-router";
-
-// Transform data into an array
-const planData = Object.entries(weeklyMeal.week).map(([day, details]) => ({
-    day,
-    meals: details.meals,
-    nutrients: details.nutrients,
-}));
 
 type Plan = {
     id: string;
@@ -19,10 +11,17 @@ type Plan = {
     sumprot: string;
 };
 
+type PlanDetail = {
+    idday: string;
+    sumcal: string;
+    sumprot: string;
+};
+
 const Plan = () => {
     const router = useRouter();
     // Eksekusi mengambil semua data recipe
     const [plans, setPlans] = useState<Plan[]>([]);
+    const [plansDetail, setPlansDetail] = useState<PlanDetail[]>([]);
     const db = useSQLiteContext();
     const getAllPlanInfo = async () => {
         try {
@@ -34,9 +33,13 @@ const Plan = () => {
         }
     };
 
-    const getAllPlanByIdDay = async (idday: string) => {
+    const getAllPlanByIdDay = async () => {
         try {
-            await db.getAllAsync("SELECT * FROM mealplanrecipes WHERE idday = ?", idday);
+            const response = await db.getAllAsync(
+                "SELECT idday, SUM(calories) as sumcal, SUM(proteins) as sumprot FROM mealplanrecipes GROUP BY idday"
+            );
+            setPlansDetail(response as PlanDetail[]);
+            console.log(response);
         } catch (e) {
             console.log(e);
         }
@@ -45,9 +48,9 @@ const Plan = () => {
     useFocusEffect(
         useCallback(() => {
             getAllPlanInfo();
-        }, [])
+            getAllPlanByIdDay();
+        }, [db])
     );
-
     return (
         <View style={{ flex: 1, padding: 20, backgroundColor: "#eef5ff" }}>
             <View
@@ -125,7 +128,7 @@ const Plan = () => {
                                 shadowRadius: 5,
                                 elevation: 5,
                             }}
-                            onPress={() => router.push("/day/1")}
+                            onPress={() => router.push(`/day/${item.id}`)}
                         >
                             <Image
                                 source={{
@@ -137,10 +140,21 @@ const Plan = () => {
                                 {item.day.toUpperCase()}
                             </Text>
                             <Text style={{ fontSize: 13, color: "#34495e", marginTop: 8 }}>
-                                Calories: {item.sumcal}
+                                Calories:{" "}
+                                {plansDetail[parseInt(item.id) - 1]?.sumcal
+                                    ? Math.round(
+                                          parseInt(plansDetail[parseInt(item.id) - 1]?.sumcal)
+                                      )
+                                    : "0"}
                             </Text>
-                            <Text style={{ fontSize: 12, color: "#7f8c8d", marginTop: 4 }}>
-                                Protein: {item.sumprot}g
+                            <Text style={{ fontSize: 13, color: "#34495e", marginTop: 8 }}>
+                                Calories:{" "}
+                                {plansDetail[parseInt(item.id) - 1]?.sumprot
+                                    ? Math.round(
+                                          parseInt(plansDetail[parseInt(item.id) - 1]?.sumprot)
+                                      )
+                                    : "0"}
+                                g
                             </Text>
                         </Pressable>
                     )}
