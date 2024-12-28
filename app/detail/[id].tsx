@@ -67,7 +67,6 @@ const Detail = () => {
     };
 
     // Eksekusi menambah favorite ke liked database
-
     const addFavoriteToDb = async (id: string, title: string, image: string) => {
         try {
             await db.runAsync("INSERT INTO favoriterecipe (id, title, image) VALUES (?, ?, ?)", [
@@ -121,15 +120,6 @@ const Detail = () => {
         }
     };
 
-    useFocusEffect(
-        useCallback(() => {
-            fetchRecipeDetail();
-            checkFavorite(id.toString());
-            checkMealPlanDb(id.toString());
-            console.log("ID recipe ori:", id.toString());
-        }, [isModalVisible])
-    );
-
     // Eksekusi check data dan hapus data dari mealplan
     const [added, setAdded] = useState<boolean>(false);
     const removeMealPlanDb = async (id: string) => {
@@ -156,6 +146,15 @@ const Detail = () => {
             console.log(e);
         }
     };
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchRecipeDetail();
+            checkFavorite(id.toString());
+            checkMealPlanDb(id.toString());
+            console.log("ID recipe ori:", id.toString());
+        }, [isModalVisible])
+    );
 
     return (
         <ScrollView style={styles.rootContainer}>
