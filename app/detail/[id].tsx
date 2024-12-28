@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { View, Text, ScrollView, Image, StyleSheet, Pressable, FlatList } from "react-native";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
-import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useSQLiteContext } from "expo-sqlite";
 import { api } from "../../api/api";
 
@@ -9,11 +9,15 @@ import ModalRecipes from "../../components/ModalRecipe";
 
 const Detail = () => {
     const { id } = useLocalSearchParams();
+    const db = useSQLiteContext();
+    const [liked, setLiked] = useState(false);
     const [isModalVisible, setModalVisible] = useState(false);
     const [modalType, setModalType] = useState("");
     const [recipe, setRecipe] = useState({
         image: "",
         title: "",
+        readyInMinutes: "",
+        cuisines: [],
         extendedIngredients: [
             {
                 image: "",
@@ -44,12 +48,15 @@ const Detail = () => {
     });
     const [errMsg, setErrMsg] = useState("");
 
+    // handle Modal
     const handleOpenModal = (type: string) => {
         setModalType(type);
         setModalVisible(true);
     };
+
     const handleCloseModal = () => setModalVisible(false);
 
+    // Mengambil data recipe dari API
     const fetchRecipeDetail = async () => {
         try {
             const response = await api.get(`/recipes/${id}/information?includeNutrition=true`);
@@ -59,9 +66,8 @@ const Detail = () => {
         }
     };
 
-    // Eksekusi menambah favorite ke likde database
-    const db = useSQLiteContext();
-    const [liked, setLiked] = useState(false);
+    // Eksekusi menambah favorite ke liked database
+
     const addFavoriteToDb = async (id: string, title: string, image: string) => {
         try {
             await db.runAsync("INSERT INTO favoriterecipe (id, title, image) VALUES (?, ?, ?)", [
@@ -119,7 +125,7 @@ const Detail = () => {
         useCallback(() => {
             fetchRecipeDetail();
             checkFavorite(id.toString());
-            checkMealPlanDb(id.toString()); // Pastikan id utuh yang dikirim
+            checkMealPlanDb(id.toString());
             console.log("ID recipe ori:", id.toString());
         }, [isModalVisible])
     );
@@ -173,6 +179,16 @@ const Detail = () => {
                     </Pressable>
                 </View>
             </View>
+            <View style={styles.cardTextContainer}>
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 5, width: 100 }}>
+                    <AntDesign name="clockcircle" size={14} color={"#2278ed"} />
+                    <Text>{recipe.readyInMinutes} min</Text>
+                </View>
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 5, width: 100 }}>
+                    <Ionicons name="flag" size={16} color={"#2278ed"} />
+                    <Text>{recipe.cuisines.length > 0 ? recipe.cuisines[0] : "Universal"}</Text>
+                </View>
+            </View>
             <View
                 style={{
                     backgroundColor: "#fff",
@@ -201,6 +217,7 @@ const Detail = () => {
                     )}
                 />
             </View>
+
             <View style={styles.contentContainer}>
                 {/* Ingredients */}
                 <View
@@ -416,6 +433,13 @@ const styles = StyleSheet.create({
         backgroundColor: "#2278ed",
         color: "#fff",
         borderRadius: 10,
+    },
+    cardTextContainer: {
+        flexDirection: "row",
+        gap: 1,
+        justifyContent: "flex-start",
+        marginBottom: 3,
+        paddingHorizontal: 20,
     },
 });
 

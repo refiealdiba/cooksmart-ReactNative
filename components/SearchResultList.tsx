@@ -12,7 +12,7 @@ type Props = {
     ];
 };
 
-export default function SearchResultList({ searchResults }: Props) {
+const SearchResultList = ({ searchResults }: Props) => {
     const router = useRouter();
 
     return (
@@ -25,14 +25,20 @@ export default function SearchResultList({ searchResults }: Props) {
                     style={styles.resultItem}
                 >
                     <Image source={{ uri: item.image }} style={styles.resultImage} />
-                    <Text>{item.title}</Text>
+                    <Text>
+                        {item.title.length > 30 ? item.title.substring(0, 30) + "..." : item.title}
+                    </Text>
                 </Pressable>
             )}
+            style={styles.container}
         />
     );
-}
+};
 
 const styles = StyleSheet.create({
+    container: {
+        paddingHorizontal: 10,
+    },
     resultItem: {
         flexDirection: "row",
         alignItems: "center",
@@ -49,3 +55,5 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 10,
     },
 });
+
+export default SearchResultList;

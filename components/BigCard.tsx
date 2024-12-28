@@ -16,13 +16,6 @@ type Props = {
 const BigCard = ({ item }: Props) => {
     const router = useRouter();
     return (
-        // <Link
-        //     href={{
-        //         pathname: `/detail/[id]`,
-        //         params: { id: item.id },
-        //     }}
-        //     asChild
-        // >
         <Pressable style={styles.card} onPress={() => router.push(`/detail/${item.id.toString()}`)}>
             <Image source={{ uri: item.image }} style={styles.cardImage} />
             <Text style={styles.cardText}>
@@ -39,7 +32,6 @@ const BigCard = ({ item }: Props) => {
                 </View>
             </View>
         </Pressable>
-        // </Link>
     );
 };
 

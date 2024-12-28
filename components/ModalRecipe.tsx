@@ -216,6 +216,12 @@ const ModalRecipes = ({ isVisible, onClose, data = "", type }: Props) => {
                             renderItem={({ item }) => (
                                 <View style={styles.listContainer}>
                                     <Pressable
+                                        style={{
+                                            width: "100%",
+                                            backgroundColor: "#2278de",
+                                            paddingVertical: 10,
+                                            borderRadius: 5,
+                                        }}
                                         onPress={() => {
                                             console.log(`pressing ${item.day}`);
                                             addToMealPlanDb(
@@ -228,7 +234,9 @@ const ModalRecipes = ({ isVisible, onClose, data = "", type }: Props) => {
                                             );
                                         }}
                                     >
-                                        <Text>{item.day}</Text>
+                                        <Text style={{ color: "white", textAlign: "center" }}>
+                                            {item.day}
+                                        </Text>
                                     </Pressable>
                                 </View>
                             )}

@@ -44,7 +44,7 @@ export default function Index() {
 
     const fetchQuickSearch = async (query: string) => {
         if (query.trim() === "") {
-            setSearchResult([]);
+            setSearchResult(null);
             return;
         }
         try {
@@ -72,7 +72,10 @@ export default function Index() {
                 />
             </View>
             {searchQuery.length > 0 ? (
-                <SearchResultList searchResults={searchResult as searchResults} />
+                <>
+                    <Text style={styles.text}>Search result for "{searchQuery}"</Text>
+                    <SearchResultList searchResults={searchResult as searchResults} />
+                </>
             ) : (
                 <RecommendationList recommendations={randomRecipes as recommendations} />
             )}
@@ -97,5 +100,11 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontSize: 30,
         fontWeight: "bold",
+    },
+    text: {
+        fontSize: 17,
+        fontWeight: "bold",
+        paddingHorizontal: 10,
+        marginVertical: 10,
     },
 });

@@ -8,7 +8,7 @@ type Props = {
     onSearch: (text: string) => void;
 };
 
-export default function SearchInputBox({ searchQuery, setSearchQuery, onSearch }: Props) {
+const SearchInputBox = ({ searchQuery, setSearchQuery, onSearch }: Props) => {
     return (
         <View style={styles.inputContainer}>
             <View style={styles.inputHeaderContainer}>
@@ -33,7 +33,7 @@ export default function SearchInputBox({ searchQuery, setSearchQuery, onSearch }
             />
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     inputContainer: {
@@ -71,3 +71,5 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
 });
+
+export default SearchInputBox;
