@@ -62,15 +62,7 @@ const Cart = () => {
             </View>
             <View style={styles.subtitle}>
                 <Text>Want to add some ingredient?</Text>
-                <Pressable
-                    style={{
-                        backgroundColor: "#2278ed",
-                        paddingHorizontal: 7,
-                        paddingVertical: 3,
-                        borderRadius: 5,
-                    }}
-                    onPress={() => router.push("/explore")}
-                >
+                <Pressable style={styles.subtitleButton} onPress={() => router.push("/explore")}>
                     <Text style={{ color: "#fff" }}>Explore</Text>
                 </Pressable>
             </View>
@@ -200,6 +192,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         gap: 4,
+    },
+    subtitleButton: {
+        backgroundColor: "#2278ed",
+        paddingHorizontal: 7,
+        paddingVertical: 3,
+        borderRadius: 5,
     },
     btnClear: {
         backgroundColor: "red",
