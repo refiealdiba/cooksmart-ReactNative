@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { View, Text, ScrollView, Image, StyleSheet, Pressable, FlatList } from "react-native";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { AntDesign, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -8,11 +8,12 @@ import { api } from "../../api/api";
 import ModalRecipes from "../../components/ModalRecipe";
 
 const Detail = () => {
-    const { id } = useLocalSearchParams();
     const db = useSQLiteContext();
+    const { id } = useLocalSearchParams();
     const [liked, setLiked] = useState(false);
     const [isModalVisible, setModalVisible] = useState(false);
     const [modalType, setModalType] = useState("");
+    const [added, setAdded] = useState<boolean>(false);
     const [recipe, setRecipe] = useState({
         image: "",
         title: "",
@@ -53,7 +54,7 @@ const Detail = () => {
         setModalType(type);
         setModalVisible(true);
     };
-
+    // handle menutup modal
     const handleCloseModal = () => setModalVisible(false);
 
     // Mengambil data recipe dari API
@@ -67,7 +68,6 @@ const Detail = () => {
     };
 
     // Eksekusi menambah favorite ke liked database
-
     const addFavoriteToDb = async (id: string, title: string, image: string) => {
         try {
             await db.runAsync("INSERT INTO favoriterecipe (id, title, image) VALUES (?, ?, ?)", [
@@ -93,6 +93,7 @@ const Detail = () => {
         }
     };
 
+    // Check Apakah ada di Db favorite
     const checkFavorite = async (id: string) => {
         try {
             const result = await db.getFirstAsync("SELECT * FROM favoriterecipe WHERE id = ?", [
@@ -109,6 +110,7 @@ const Detail = () => {
         }
     };
 
+    // Toggle tombol favorite
     const toggleFavorite = async (id: string, title: string, image: string) => {
         if (liked) {
             // Jika sudah di-favorite, hapus dari database
@@ -121,17 +123,7 @@ const Detail = () => {
         }
     };
 
-    useFocusEffect(
-        useCallback(() => {
-            fetchRecipeDetail();
-            checkFavorite(id.toString());
-            checkMealPlanDb(id.toString());
-            console.log("ID recipe ori:", id.toString());
-        }, [isModalVisible])
-    );
-
     // Eksekusi check data dan hapus data dari mealplan
-    const [added, setAdded] = useState<boolean>(false);
     const removeMealPlanDb = async (id: string) => {
         try {
             await db.runAsync("DELETE FROM mealplanrecipes WHERE id = ?", [id]);
@@ -141,6 +133,7 @@ const Detail = () => {
         }
     };
 
+    // Check apakah ada di db mealplan
     const checkMealPlanDb = async (id: string) => {
         try {
             const response = await db.getFirstAsync("SELECT * FROM mealplanrecipes WHERE id = ?", [
@@ -156,6 +149,15 @@ const Detail = () => {
             console.log(e);
         }
     };
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchRecipeDetail();
+            checkFavorite(id.toString());
+            checkMealPlanDb(id.toString());
+            console.log("ID recipe ori:", id.toString());
+        }, [isModalVisible])
+    );
 
     return (
         <ScrollView style={styles.rootContainer}>
@@ -217,7 +219,6 @@ const Detail = () => {
                     )}
                 />
             </View>
-
             <View style={styles.contentContainer}>
                 {/* Ingredients */}
                 <View

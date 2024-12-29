@@ -148,7 +148,7 @@ const Plan = () => {
                                     : "0"}
                             </Text>
                             <Text style={{ fontSize: 13, color: "#34495e", marginTop: 8 }}>
-                                Calories:{" "}
+                                Proteins:{" "}
                                 {plansDetail[parseInt(item.id) - 1]?.sumprot
                                     ? Math.round(
                                           parseInt(plansDetail[parseInt(item.id) - 1]?.sumprot)

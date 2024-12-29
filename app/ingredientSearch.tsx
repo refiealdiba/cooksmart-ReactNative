@@ -5,6 +5,7 @@ import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { api } from "@/api/api";
 
 const IngredientSearch = () => {
+    const router = useRouter();
     const [searchResults, setSearchResults] = useState([
         {
             id: 0,
@@ -15,21 +16,25 @@ const IngredientSearch = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [ingredientsList, setIngredientsList] = useState<string[]>([]);
 
+    // Fungsi untuk menambahkan field input
     const handleAddField = () => {
         setIngredientsList([...ingredientsList, ""]);
     };
 
+    // Fungsi untuk menghapus field input
     const handleRemoveField = (index: number) => {
         const updatedList = ingredientsList.filter((_, i) => i !== index);
         setIngredientsList(updatedList);
     };
 
+    // Fungsi untuk mengubah value input
     const handleInputChange = (text: string, index: number) => {
         const updatedList = [...ingredientsList];
         updatedList[index] = text;
         setIngredientsList(updatedList);
     };
 
+    // Fungsi untuk fetch data dari API mencari recipes berdasarkan ingredients
     const fetchSearchIngredients = async () => {
         try {
             const response = await api.get("/recipes/findByIngredients", {
@@ -42,8 +47,6 @@ const IngredientSearch = () => {
             console.log("Failed to fetch data");
         }
     };
-
-    const router = useRouter();
 
     useEffect(() => {
         setSearchResults([]);

@@ -13,10 +13,11 @@ type Ingredient = {
 };
 
 const Cart = () => {
-    // Ekseskusi untuk mendapatkan semua ingredients di DB
-    const router = useRouter();
     const db = useSQLiteContext();
+    const router = useRouter();
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+
+    // Mengambil semua ingredients dari DB
     const getAllIngredientsFromDb = async () => {
         try {
             const response = await db.getAllAsync("SELECT * FROM cart");
@@ -27,6 +28,7 @@ const Cart = () => {
         }
     };
 
+    // Menghapus satu ingredient dari DB
     const removeSingleIngredient = async (id: string) => {
         try {
             await db.runAsync("DELETE FROM cart WHERE id = $id", { $id: id });
@@ -35,6 +37,7 @@ const Cart = () => {
         }
     };
 
+    // Menghapus semua ingredients dari DB
     const removeAllIngredients = async () => {
         try {
             await db.runAsync("DELETE FROM cart");

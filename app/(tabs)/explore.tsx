@@ -24,6 +24,7 @@ const Explore = () => {
     const [filterQuery, setFilterQuery] = useState<string[]>([]);
     const [filterModalVisible, setFilterModalVisible] = useState(false);
     const [searchResult, setSearchResult] = useState<searchResults[]>([]);
+    const [liked, setLiked] = useState(false);
     const [errMsg, setErrMsg] = useState("");
     const diets = [
         "gluten free",
@@ -38,6 +39,7 @@ const Explore = () => {
         "low fodmap",
         "whole30",
     ]; // Diet items
+    const db = useSQLiteContext();
 
     // Random Recipe
     const fetchRandomRecipe = async () => {
@@ -82,8 +84,6 @@ const Explore = () => {
     };
 
     // Eksekusi DB
-    const db = useSQLiteContext();
-    const [liked, setLiked] = useState(false);
     const addFavoriteToDb = async (id: string, title: string, image: string) => {
         try {
             await db.runAsync("INSERT INTO favoriterecipe (id, title, image) VALUES (?, ?, ?)", [
