@@ -18,10 +18,11 @@ type Day = {
 };
 
 const DetailPlan = () => {
-    const { id } = useLocalSearchParams(); // Mengambil id dari parameter route
     const db = useSQLiteContext();
-    const [recipes, setRecipes] = useState<Recipe[]>([]); // State untuk menyimpan recipe
-    const [day, setDay] = useState<string>(""); // State untuk menyimpan nama hari
+    const router = useRouter();
+    const { id } = useLocalSearchParams();
+    const [recipes, setRecipes] = useState<Recipe[]>([]);
+    const [day, setDay] = useState<string>("");
 
     // Fungsi untuk mengambil nama hari berdasarkan id
     const getDayName = async () => {
@@ -30,7 +31,7 @@ const DetailPlan = () => {
                 id.toString(),
             ]);
             if (response) {
-                setDay(response.day); // Mengambil nama hari dari response
+                setDay(response.day);
             }
         } catch (error) {
             console.log("Error fetching day name:", error);
@@ -43,11 +44,13 @@ const DetailPlan = () => {
             const response = await db.getAllAsync("SELECT * FROM mealplanrecipes WHERE idday = ?", [
                 id.toString(),
             ]);
-            setRecipes(response as Recipe[]); // Menyimpan data resep ke state
+            setRecipes(response as Recipe[]);
         } catch (error) {
             console.log("Error fetching recipes:", error);
         }
     };
+
+    // Fungsi untuk menghapus resep dari mealplanrecipes DB
     const removeRecipeFromMealPlan = async (id: string) => {
         try {
             await db.runAsync("DELETE FROM mealplanrecipes WHERE id = ?", [id]);
@@ -57,15 +60,13 @@ const DetailPlan = () => {
     };
 
     useEffect(() => {
-        getDayName(); // Panggil fungsi untuk mendapatkan nama hari
-        getAllRecipeFromDb(); // Panggil fungsi untuk mendapatkan resep
+        getDayName();
+        getAllRecipeFromDb();
     }, [recipes]);
 
-    const router = useRouter();
     return (
         <View style={styles.container}>
-            {/* Header dengan Nama Hari */}
-            <Text style={styles.header}>{day || "Loading..."} Plan</Text>
+            <Text style={styles.header}>{day} Plan</Text>
             <FlatList
                 style={{ paddingBottom: 20, paddingHorizontal: 20 }}
                 data={recipes}

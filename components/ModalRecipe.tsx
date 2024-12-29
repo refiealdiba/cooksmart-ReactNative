@@ -25,6 +25,8 @@ type Ingredient = {
 
 const ModalRecipes = ({ isVisible, onClose, data = "", type }: Props) => {
     const db = useSQLiteContext();
+    const [days, setDays] = useState<Day[]>([]);
+
     // Eksekusi menambah ingredient ke cart
     const addIngredientToCart = async (
         id: string,
@@ -43,8 +45,8 @@ const ModalRecipes = ({ isVisible, onClose, data = "", type }: Props) => {
             console.log(e);
         }
     };
-    // Mengambil data days
-    const [days, setDays] = useState<Day[]>([]);
+
+    // Mengambil data days untuk ditampilkan pada opsi plan
     const getAllDays = async () => {
         try {
             const response = await db.getAllAsync("SELECT id, day FROM mealplan");
@@ -53,9 +55,6 @@ const ModalRecipes = ({ isVisible, onClose, data = "", type }: Props) => {
             console.log(e);
         }
     };
-    useEffect(() => {
-        getAllDays();
-    });
 
     // Ekseskusi menambah ke meal plan
     const addToMealPlanDb = async (
@@ -78,7 +77,7 @@ const ModalRecipes = ({ isVisible, onClose, data = "", type }: Props) => {
         }
     };
 
-    // Mengecek Cart
+    // Mengecek Cart apakah sudah ada ingredient yang sama
     const checkCart = async (
         id: string,
         title: string,
@@ -102,6 +101,11 @@ const ModalRecipes = ({ isVisible, onClose, data = "", type }: Props) => {
             console.log(e);
         }
     };
+
+    useEffect(() => {
+        getAllDays();
+    });
+
     return (
         <Modal
             animationType="slide"
