@@ -42,6 +42,7 @@ backupBeforeAPI
 backupBeforeAPI/
 .env
 READMEdocs.md
+readmebackup.md
 noteMe.txt
 
 *.csv

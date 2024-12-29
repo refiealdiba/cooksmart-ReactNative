@@ -1,50 +1,154 @@
-# Welcome to your Expo app 👋
+# 📄Documentation
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
 ## Get started
 
-1. Install dependencies
+1. Buat file .env untuk autentikasi API dengan struktur
 
-   ```bash
-   npm install
-   ```
+    ```
+    EXPO_PUBLIC_API_URL=https://api.spoonacular.com
+    EXPO_PUBLIC_API_KEY=yourkey
+    ```
 
-2. Start the app
+2. Install dependencies
 
-   ```bash
-    npx expo start
-   ```
+    ```bash
+    npm install
+    ```
 
-In the output, you'll find options to open the app in a
+3. Start the app
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+    ```bash
+     npx expo start
+    ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## API Usage
 
-## Get a fresh project
+**BASE API**
+menggunakan axios untuk melakukan pemanggilan API dan mengatur base url dan key untuk autentikasi API yang didapat dari file _**.env**_
 
-When you're ready, run:
+```typescript
+import axios from "axios";
 
-```bash
-npm run reset-project
+const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+const apiKey = process.env.EXPO_PUBLIC_API_KEY;
+
+export const api = axios.create({
+    baseURL: apiUrl,
+    headers: {
+        "Content-Type": "application/json",
+    },
+    params: {
+        apiKey: apiKey,
+    },
+});
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+1.  **Mendapatkan semua recipe berdasarkan keyword biasa**
 
-## Learn more
+    ```typescript
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchResult, setSearchResult] = useState<searchResults | null>();
 
-To learn more about developing your project with Expo, look at the following resources:
+    const fetchQuickSearch = async (query: string) => {
+        if (query.trim() === "") {
+            setSearchResult(null);
+            return;
+        }
+        try {
+            const response = await api.get(`/recipes/complexSearch`, {
+                params: { query },
+            });
+            setSearchResult(response.data.results);
+        } catch (error) {
+            setErrMsg("Error fetching data");
+        }
+    };
+    ```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+    Contoh kode di atas terletak pada file **_index.tsx_**
 
-## Join the community
+    Saat _fetchQuickSearch_ dijalankan maka variable _response_ akan berisi daftar recipes yang memiliki nama yang sama dengan _parameter_ dari state _query_ kemudian akan disimpan dalam _state searchResult_ .
 
-Join our community of developers creating universal apps.
+    _URL API:_  
+    https://api.spoonacular.com/recipes/complexSearch?={query}
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+2.  **Mendapatkan random recipe dengan limit**
+
+    ```typescript
+    const [randomRecipes, setRandomRecipes] = useState<recommendations>();
+
+    const fetchRandomRecipes = async () => {
+        try {
+            const response = await api.get("/recipes/random?number=10");
+            setRandomRecipes(response.data.recipes);
+        } catch (error) {
+            setErrMsg(error as string);
+        }
+    };
+    ```
+
+    Contoh kode di atas terletak pada file **_index.tsx_**
+
+    Saat _fetchRandomRecipes_ dijalankan maka variable _response_ akan berisi daftar random recipes denga limit data yang didapat adalah 10. Hasil dari pemanggilan API akan disimpan pada state _randomRecipes_ yang nantinya akan ditampilkan sebagai recommendation.
+
+    _URL API:_
+    https://api.spoonacular.com/recipes/random?number=10
+
+3.  **Mendapatkan detail dari Recipe**
+
+    ```typescript
+    const { id } = useLocalSearchParams();
+    const [recipe, setRecipe] = useState({
+        image: "",
+        title: "",
+        readyInMinutes: "",
+        cuisines: [],
+        extendedIngredients: [
+            {
+                image: "",
+                name: "",
+                amount: 0,
+                unit: "",
+            },
+        ],
+        nutrition: {
+            nutrients: [
+                {
+                    name: "",
+                    amount: 0,
+                    unit: "",
+                },
+            ],
+        },
+        analyzedInstructions: [
+            {
+                steps: [
+                    {
+                        step: "",
+                    },
+                ],
+            },
+        ],
+        diets: [],
+    });
+
+    const fetchRecipeDetail = async () => {
+        try {
+            const response = await api.get(`/recipes/${id}/information?includeNutrition=true`);
+            setRecipe(response.data);
+        } catch (error: any) {
+            setErrMsg(error.message);
+        }
+    };
+    ```
+
+    Contoh kode di atas terletak pada **_detail/[id].tsx_**
+
+    Saat _fetchRecipeDetail_ dijalankan maka variabel _response_ akan berisi detail recipe dengan _id_ yang didapat dari parameter url menggunakan _useLocalSearchParams_ dengan parameter tambahan yaitu _includeNutrition=true_ agar data yang didapat lengkap dengan kandungan nutrisi dari recipe. Kemudian disimpan pada state dengan ketentuan hanya mengambil beberapa data yang diperlukan.
+
+    _URL API:_
+    https://api.spoonacular.com/recipes/{id}/information?includeNutrition=true
+
+4.  **Mendapatkan daftar Recipes dengan filter diet**
