@@ -146,9 +146,94 @@ export const api = axios.create({
 
     Contoh kode di atas terletak pada **_detail/[id].tsx_**
 
-    Saat _fetchRecipeDetail_ dijalankan maka variabel _response_ akan berisi detail recipe dengan _id_ yang didapat dari parameter url menggunakan _useLocalSearchParams_ dengan parameter tambahan yaitu _includeNutrition=true_ agar data yang didapat lengkap dengan kandungan nutrisi dari recipe. Kemudian disimpan pada state dengan ketentuan hanya mengambil beberapa data yang diperlukan.
+    Saat _fetchRecipeDetail_ dijalankan maka variabel _response_ akan berisi detail recipe dengan _id_ yang didapat dari parameter url menggunakan _useLocalSearchParams_ dengan parameter tambahan yaitu _includeNutrition=true_ agar data yang didapat lengkap dengan kandungan nutrisi dari recipe. Kemudian disimpan pada state _recipe_ dengan ketentuan hanya mengambil beberapa data yang diperlukan.
 
     _URL API:_
     https://api.spoonacular.com/recipes/{id}/information?includeNutrition=true
 
 4.  **Mendapatkan daftar Recipes dengan filter diet**
+
+    ```typescript
+    const [searchResult, setSearchResult] = useState<searchResults[]>([]);
+    const [filterQuery, setFilterQuery] = useState<string[]>([]);
+
+    const toggleFilter = (item: string) => {
+        setFilterQuery(
+            (prev) =>
+                prev.includes(item)
+                    ? prev.filter((i) => i !== item) // Remove if already selected
+                    : [...prev, item] // Add if not selected
+        );
+    };
+
+    const fetchSearchComplex = async (query: string) => {
+        try {
+            const response = await api.get("/recipes/complexSearch", {
+                params: {
+                    query: query,
+                    diet: filterQuery.join(","),
+                },
+            });
+            setSearchResult(response.data.results);
+        } catch (error: any) {
+            setErrMsg(error.message);
+        }
+    };
+    ```
+
+    Contoh kode di atas terletak pada file _**explore.tsx**_
+
+    Saat _fetchSearchComplex_ dijalankan maka variabel _response_ akan berisi hasil dari pemanggilan API untuk pencarian dengan parameter tambahan yaitu _query_ dan _filterQuery_ untuk filter diet. State _filterQuery_ berisi kumpulan string yang didapatkan ketika ada tombol pilihan filter yang ditekan.
+
+    _URL_API:_ https://api.spoonacular.com/recipes/complexSearch?query={query}&diet={filterQuery}
+
+5.  **Mendapatkan list Recipes dengan bahan**
+
+    ```typescript
+    const [ingredientsList, setIngredientsList] = useState<string[]>([]);
+    const [searchResults, setSearchResults] = useState([
+        {
+            id: 0,
+            image: "",
+            title: "",
+        },
+    ]);
+
+    // Fungsi untuk menambahkan field input
+    const handleAddField = () => {
+        setIngredientsList([...ingredientsList, ""]);
+    };
+
+    // Fungsi untuk menghapus field input
+    const handleRemoveField = (index: number) => {
+        const updatedList = ingredientsList.filter((_, i) => i !== index);
+        setIngredientsList(updatedList);
+    };
+
+    // Fungsi untuk mengubah value input
+    const handleInputChange = (text: string, index: number) => {
+        const updatedList = [...ingredientsList];
+        updatedList[index] = text;
+        setIngredientsList(updatedList);
+    };
+
+    // Fungsi untuk fetch data dari API mencari recipes berdasarkan ingredients
+    const fetchSearchIngredients = async () => {
+        try {
+            const response = await api.get("/recipes/findByIngredients", {
+                params: {
+                    ingredients: ingredientsList.join(","),
+                },
+            });
+            setSearchResults(response.data);
+        } catch {
+            console.log("Failed to fetch data");
+        }
+    };
+    ```
+
+    Contoh kode di atas terletak pada file _**ingredientSearch.tsx**_
+
+    Saat _fetchIngredients_ dijalankan maka response akan berisi list recipes yang mengandung bahan dari parameter _ingredients_ yang diambil dari state _ingredientsList_, lalu akan disimpan pada state _searchResult_. Untuk pengambilan data ingredient menggunakan beberapa field sesuai dengan kebutuhan dari user dan dikumpulkan dalam state _ingredientsList_.
+
+    _URL API:_ https://api.spoonacular.com/recipes/findByIngredients?ingredients={ingredientsList}
