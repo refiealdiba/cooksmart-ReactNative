@@ -11,6 +11,16 @@ export default function RootLayout() {
                 CREATE TABLE IF NOT EXISTS cart(id INTEGER, title TEXT, image TEXT, quantity INTEGER, unit TEXT);
                 CREATE TABLE IF NOT EXISTS mealplan(id INTEGER, day TEXT, sumcal INTEGER, sumprot INTEGER);
                 CREATE TABLE IF NOT EXISTS mealplanrecipes(id INTEGER, idday INTEGER, title TEXT, image TEXT, calories INTEGER, proteins INTEGER, FOREIGN KEY(idday) REFERENCES mealplan(id));                                           
+
+                INSERT INTO mealplan (id, day, sumcal, sumprot)
+VALUES
+    ('1', 'Monday', '0','0'),
+    ('2', 'Tuesday', '0','0'),
+    ('3', 'Wednesday', '0','0'),
+    ('4', 'Thursday', '0','0'),
+    ('5', 'Friday', '0','0'),
+    ('6', 'Saturday', '0','0'),
+    ('7', 'Sunday', '0','0');
                 `
             );
             console.log("Database created successfully");

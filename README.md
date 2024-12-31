@@ -11,16 +11,38 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
     EXPO_PUBLIC_API_KEY=yourkey
     ```
 
-2. Install dependencies
+2. Tambahkan perintah SQL berikut dibawah perintah SQL pembuatan table pada file **app/\_layout.tsx** untuk membuat data hari pada Database ketika pertama dibuild
+
+    **NOTE**: jika sudah ada dan sudah pernah dibuild menggunakan **npx expo start** atau **npm run start** hapus perintah sql berikut agar data hari tidak tertumpuk.
+
+    ```sql
+    INSERT INTO mealplan (id, day, sumcal, sumprot)
+    VALUES
+        ('1', 'Monday', '0','0'),
+        ('2', 'Tuesday', '0','0'),
+        ('3', 'Wednesday', '0','0'),
+        ('4', 'Thursday', '0','0'),
+        ('5', 'Friday', '0','0'),
+        ('6', 'Saturday', '0','0'),
+        ('7', 'Sunday', '0','0');
+    ```
+
+3. Install dependencies
 
     ```bash
     npm install
     ```
 
-3. Start the app
+4. Start the app
 
     ```bash
      npx expo start
+    ```
+
+    or
+
+    ```bash
+    npm run start
     ```
 
 ## API Usage
