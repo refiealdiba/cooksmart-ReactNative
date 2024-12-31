@@ -11,7 +11,7 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
     EXPO_PUBLIC_API_KEY=yourkey
     ```
 
-2. Tambahkan perintah SQL berikut dibawah perintah SQL pembuatan table pada file **app/\_layout.tsx** untuk membuat data hari pada Database ketika pertama dibuild
+2. Tambahkan perintah SQL berikut di bawah perintah SQL pembuatan table pada file **app/\_layout.tsx** untuk membuat data hari pada Database ketika pertama dibuild
 
     **NOTE**: jika sudah ada dan sudah pernah dibuild menggunakan **npx expo start** atau **npm run start** hapus perintah sql berikut agar data hari tidak tertumpuk.
 
